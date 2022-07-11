@@ -2,6 +2,8 @@
 
 import cmd
 import sys
+import tkinter
+from tkinter import filedialog as fd
 
 import colored
 from colored import stylize
@@ -17,11 +19,18 @@ class Explicatio(cmd.Cmd):
         '[explicatio] ',
         colored.fg('red')
     )
-    file = None
+    filename = None
 
     def do_load(self, arg):
         'Load a file for analysis'
-        print(f'Loading {arg}')
+        print(f'Loading {arg}...')
+        # https://bytes.com/topic/python/answers/19510-tkfiledialog-without-parent-window
+        root = tkinter.Tk()
+        root.withdraw()
+        # https://www.pythontutorial.net/tkinter/tkinter-open-file-dialog/
+        self.filename = fd.askopenfilename()
+        root.destroy()
+        print(self.filename)
 
     def do_sentiment(self, arg):
         'Run a quick sentiment analysis'
@@ -30,6 +39,7 @@ class Explicatio(cmd.Cmd):
             'Everything is great!',
             'The world is a vampire and it sucks bad.'
         ]
+        # https://www.nltk.org/howto/sentiment.html
         sid = SentimentIntensityAnalyzer()
         scores = sid.polarity_scores(sents[2])
         print(
