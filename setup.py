@@ -10,7 +10,8 @@ setuptools.setup(
     packages=['explicatio'],
     scripts=['bin/explicatio'],
     install_requires=[
-          'colored'
+          'colored',
+          'nltk'
       ],
     classifiers=[
         "Programming Language :: Python :: 3",
