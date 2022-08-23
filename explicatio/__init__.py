@@ -2,6 +2,7 @@
 
 # Built-ins
 import cmd
+import os
 import sys
 import tkinter
 from tkinter import filedialog as fd
@@ -9,6 +10,8 @@ from tkinter import filedialog as fd
 # Third party modules
 import colored
 from colored import stylize
+
+import nltk
 from nltk import tokenize
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
@@ -131,6 +134,18 @@ class Explicatio(cmd.Cmd):
 
 
 if __name__ == '__main__':
+    # Quick and easy way to see if NLTK data is downloaded.
+    if os.path.exists(nltk.data.path[0]) is False:
+        print(
+            stylize(
+                '[ERROR] NLTK is not installed. This needs to be installed so'
+                ' please wait while NLTK\'s data is downloaded...',
+                colored.fg('red')
+            )
+        )
+        # Download all NLTK data just in case
+        # Thanks to https://stackoverflow.com/a/47616241
+        nltk.download('all', quiet=True)
     try:
         e = Explicatio().cmdloop()
     except KeyboardInterrupt:
