@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
+# Built-ins
 import cmd
 import sys
 
+# Third party modules
 import colored
 from colored import stylize
 
