@@ -122,6 +122,13 @@ class Explicatio(cmd.Cmd):
                 )
             )
 
+    def do_dispersion(self, arg):
+        'Do a quick dispersion plot for words'
+        args = arg.split(';')
+        print(args)
+        corpus = nltk.Text(self.data)
+        corpus.dispersion_plot(args)
+
     def do_quit(self, arg):
         'Quit explicatio'
         print('Thanks for using explicatio!')
