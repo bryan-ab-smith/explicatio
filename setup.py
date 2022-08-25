@@ -13,7 +13,10 @@ setuptools.setup(
     scripts=['bin/explicatio'],
     install_requires=[
           'colored',
-          'nltk'
+          'halo',
+          'matplotlib',
+          'nltk',
+          'textract'
       ],
     classifiers=[
         "Programming Language :: Python :: 3",

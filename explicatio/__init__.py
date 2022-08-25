@@ -11,10 +11,10 @@ from tkinter import filedialog as fd
 import colored
 from colored import stylize
 from halo import Halo
-
 import nltk
 from nltk import tokenize, FreqDist
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import textract
 
 VERSION = '2022.08'
 
@@ -47,10 +47,14 @@ class Explicatio(cmd.Cmd):
             root.destroy()
 
         try:
-            with open(self.filename) as f:
+            '''with open(self.filename) as f:
                 self.data = f.read()
                 self.word_tokens = nltk.word_tokenize(self.data)
-                self.corpus = nltk.Text(self.word_tokens)
+                self.corpus = nltk.Text(self.word_tokens)'''
+            self.data = textract.process(self.filename, encoding='utf-8')
+            self.data = self.data.decode('utf-8')
+            self.word_tokens = nltk.word_tokenize(self.data)
+            self.corpus = nltk.Text(self.word_tokens)
             print(f'Loaded {self.filename}')
 
             len_text = len(self.data)
