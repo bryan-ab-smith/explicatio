@@ -2,6 +2,7 @@
 
 # Built-ins
 import cmd
+import mimetypes
 import os
 import sys
 import tkinter
@@ -56,6 +57,17 @@ class Explicatio(cmd.Cmd):
             self.word_tokens = nltk.word_tokenize(self.data)
             self.corpus = nltk.Text(self.word_tokens)
             print(f'Loaded {self.filename}')
+
+            if mimetypes.guess_type(self.filename)[0] != 'text/plain':
+                print(
+                    stylize(
+                        'CAUTION: As you have loaded a non-plain text '
+                        'document, you are strongly encouraged to run '
+                        '\'showcontents\' to verify what explicatio is '
+                        'working with.',
+                        colored.fg('yellow')
+                    )
+                )
 
             len_text = len(self.data)
             words_text = len(self.data.split())

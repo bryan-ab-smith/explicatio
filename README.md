@@ -1,11 +1,14 @@
-### Explicatio
+## Explicatio
 
 Explicatio (noun): Latin for "explanation"
 
 **NOTE: This is nowhere near being usable at this point. Explicatio is still very much under development.**
 
-#### Description
+### Description
 This is the home of an in development piece of software to support text analysis. More to come.
+
+#### Supported Formats
+Explicatio uses [textract](https://textract.readthedocs.io/en/stable/) to import content. Formats supported by explicatio for reading are therefore those supported by textract. Whatever you open, you are encouraged to verify that the content explicatio is working with is what you expect it to be by running the `showcontents` command after loading a file. If in doubt, your best bet is to put the text you want to work with in a plain text file and go from there.
 
 ### Running and Packaging
 
