@@ -2,5 +2,4 @@
 
 from explicatio import Explicatio
 
-ex = Explicatio
-# ex.get_input()
+Explicatio().cmdloop()

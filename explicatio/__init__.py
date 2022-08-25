@@ -16,8 +16,7 @@ import nltk
 from nltk import tokenize, FreqDist
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-import version
-VERSION = version.__version__
+VERSION = '2022.08'
 
 
 class Explicatio(cmd.Cmd):
