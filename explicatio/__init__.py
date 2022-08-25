@@ -10,9 +10,10 @@ from tkinter import filedialog as fd
 # Third party modules
 import colored
 from colored import stylize
+from halo import Halo
 
 import nltk
-from nltk import tokenize
+from nltk import tokenize, FreqDist
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 
@@ -27,6 +28,7 @@ class Explicatio(cmd.Cmd):
     )
     filename = None
     data = ''
+    word_tokens = []
 
     def do_load(self, arg):
         'Load a file for analysis'
@@ -39,6 +41,8 @@ class Explicatio(cmd.Cmd):
         root.destroy()
         with open(self.filename) as f:
             self.data = f.read()
+            self.word_tokens = nltk.word_tokenize(self.data)
+            self.corpus = nltk.Text(self.word_tokens)
         print(f'Loaded {self.filename}')
 
         len_text = len(self.data)
@@ -125,9 +129,25 @@ class Explicatio(cmd.Cmd):
     def do_dispersion(self, arg):
         'Do a quick dispersion plot for words'
         args = arg.split(';')
-        print(args)
-        corpus = nltk.Text(self.data)
-        corpus.dispersion_plot(args)
+
+        self.corpus.dispersion_plot(args)
+
+    def do_concordance(self, arg):
+        'Run a quick concordance with the argument as the keyword'
+        args = arg.split()
+        self.corpus.concordance(args[0], lines=args[1])
+
+    def do_freqdist(self, arg):
+        'Get a frequency distribution.'
+
+        freq_dist = FreqDist(self.corpus)
+        dist = freq_dist.most_common(int(arg))
+        print(f'\nShowing top {arg} words')
+        print('Word'.ljust(25) + 'Count')
+        for item in dist:
+            print(item[0].ljust(25), end='')
+            print(str(item[1]).ljust(25))
+        print('\n')
 
     def do_quit(self, arg):
         'Quit explicatio'
@@ -143,16 +163,17 @@ class Explicatio(cmd.Cmd):
 if __name__ == '__main__':
     # Quick and easy way to see if NLTK data is downloaded.
     if os.path.exists(nltk.data.path[0]) is False:
-        print(
-            stylize(
-                '[ERROR] NLTK is not installed. This needs to be installed so'
-                ' please wait while NLTK\'s data is downloaded...',
-                colored.fg('red')
-            )
+        spinner = Halo(
+            text='Natural language data not found. Downloading to '
+                 f'{nltk.data.path[0]}...',
+            text_color='red',
+            spinner='bouncingBall'
         )
+        spinner.start()
         # Download all NLTK data just in case
         # Thanks to https://stackoverflow.com/a/47616241
         nltk.download('all', quiet=True)
+        spinner.stop()
     try:
         e = Explicatio().cmdloop()
     except KeyboardInterrupt:
