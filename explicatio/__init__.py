@@ -16,6 +16,9 @@ import nltk
 from nltk import tokenize, FreqDist
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
+import version
+VERSION = version.__version__
+
 
 class Explicatio(cmd.Cmd):
     intro = stylize(
@@ -32,54 +35,68 @@ class Explicatio(cmd.Cmd):
 
     def do_load(self, arg):
         'Load a file for analysis'
-        print(f'Loading {arg}...')
-        # https://bytes.com/topic/python/answers/19510-tkfiledialog-without-parent-window
-        root = tkinter.Tk()
-        root.withdraw()
-        # https://www.pythontutorial.net/tkinter/tkinter-open-file-dialog/
-        self.filename = fd.askopenfilename()
-        root.destroy()
-        with open(self.filename) as f:
-            self.data = f.read()
-            self.word_tokens = nltk.word_tokenize(self.data)
-            self.corpus = nltk.Text(self.word_tokens)
-        print(f'Loaded {self.filename}')
+        if arg != '':
+            print(f'Loading {arg}...')
+            self.filename = arg
+        else:
+            print('Prompting for file...')
+            # https://bytes.com/topic/python/answers/19510-tkfiledialog-without-parent-window
+            root = tkinter.Tk()
+            root.withdraw()
+            # https://www.pythontutorial.net/tkinter/tkinter-open-file-dialog/
+            self.filename = fd.askopenfilename()
+            root.destroy()
 
-        len_text = len(self.data)
-        words_text = len(self.data.split())
-        unique_words_text = len(set(self.data.split()))
-        print(
-            stylize(
-                '(Approximate) Quick facts',
-                colored.fg('blue')
+        try:
+            with open(self.filename) as f:
+                self.data = f.read()
+                self.word_tokens = nltk.word_tokenize(self.data)
+                self.corpus = nltk.Text(self.word_tokens)
+            print(f'Loaded {self.filename}')
+
+            len_text = len(self.data)
+            words_text = len(self.data.split())
+            unique_words_text = len(set(self.data.split()))
+            print(
+                stylize(
+                    '(Approximate) Quick facts',
+                    colored.fg('blue')
+                )
             )
-        )
-        print(
-            stylize(
-                f'  Characters: {len_text:,}',
-                colored.fg('green')
+            print(
+                stylize(
+                    f'  Characters: {len_text:,}',
+                    colored.fg('green')
+                )
             )
-        )
-        print(
-            stylize(
-                f'  Words: {words_text:,}',
-                colored.fg('green')
+            print(
+                stylize(
+                    f'  Words: {words_text:,}',
+                    colored.fg('green')
+                )
             )
-        )
-        print(
-            stylize(
-                f'  Unique Words: {unique_words_text:,}',
-                colored.fg('green')
+            print(
+                stylize(
+                    f'  Unique Words: {unique_words_text:,}',
+                    colored.fg('green')
+                )
             )
-        )
-        print(
-            stylize(
-                'NOTE: This is indicative of a sense of the size of the '
-                'file, not a measurement that should be used to draw '
-                'conclusions.',
-                colored.fg('red')
+            print(
+                stylize(
+                    'NOTE: This is indicative of a sense of the size of the '
+                    'file, not a measurement that should be used to draw '
+                    'conclusions.',
+                    colored.fg('red')
+                )
             )
-        )
+        except FileNotFoundError:
+            print(
+                stylize(
+                    f'! {self.filename} was not found',
+                    colored.fg('red')
+                )
+            )
+            pass
 
     def do_showcontents(self, arg):
         if self.filename is not None:
@@ -148,6 +165,9 @@ class Explicatio(cmd.Cmd):
             print(item[0].ljust(25), end='')
             print(str(item[1]).ljust(25))
         print('\n')
+
+    def do_about(self, arg):
+        print(f'Version: {VERSION}')
 
     def do_quit(self, arg):
         'Quit explicatio'

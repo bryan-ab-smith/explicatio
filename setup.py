@@ -1,8 +1,12 @@
 import setuptools
 
+import explicatio.version
+
+VERSION = explicatio.version.__version__
+
 setuptools.setup(
     name="Explicatio",
-    version="1.0.0",
+    version=VERSION,
     author="Bryan Smith",
     author_email="bryanabsmith@gmail.com",
     description="A simple analysis tool for text.",
