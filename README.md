@@ -1,10 +1,11 @@
 ### Explicatio
 
+Explicatio (noun): Latin for "explanation"
+
 **NOTE: This is nowhere near being usable at this point. Explicatio is still very much under development.**
 
 #### Description
-This is the home of an in development piece of software to support text 
-analysis. More to come.
+This is the home of an in development piece of software to support text analysis. More to come.
 
 ### Running and Packaging
 
