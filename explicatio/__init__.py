@@ -2,6 +2,7 @@
 
 # Built-ins
 import cmd
+from collections import Counter
 import mimetypes
 import os
 import sys
@@ -12,12 +13,16 @@ from tkinter import filedialog as fd
 import colored
 from colored import stylize
 from halo import Halo
+from matplotlib import pyplot as plt
 import nltk
 from nltk import tokenize, FreqDist
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import textract
 
 VERSION = '2022.08'
+
+# A lot of the following was supported by the following:
+#   - https://realpython.com/nltk-nlp-python/
 
 
 class Explicatio(cmd.Cmd):
@@ -169,6 +174,10 @@ class Explicatio(cmd.Cmd):
         args = arg.split()
         self.corpus.concordance(args[0], lines=args[1])
 
+    def do_collocations(self, arg):
+        'Find collocations in the text'
+        self.corpus.collocations()
+
     def do_freqdist(self, arg):
         'Get a frequency distribution.'
 
@@ -180,6 +189,26 @@ class Explicatio(cmd.Cmd):
             print(item[0].ljust(25), end='')
             print(str(item[1]).ljust(25))
         print('\n')
+
+    def do_posgraph(self, arg):
+        'Generate a graph of parts of speech'
+        # list_pos = []
+        pos = nltk.pos_tag(self.word_tokens)
+        # https://www.h2kinfosys.com/blog/simple-statistics-with-nltk-counting-of-pos-tags-and-frequency-distributions/
+        count = Counter(tag for _, tag in pos)
+        # https://stackoverflow.com/a/37708190
+        plt.xticks(rotation=45)
+        # https://stackoverflow.com/a/52572237
+        plt.bar(count.keys(), count.values())
+        plt.show()
+
+    def do_nerec(self, arg):
+        'Named entity recognition tree building'
+        # Broken for now.
+
+        pos = nltk.pos_tag(self.word_tokens)
+        tree = nltk.ne_chunk(pos)
+        tree.draw()
 
     def do_about(self, arg):
         print(f'Version: {VERSION}')
