@@ -117,8 +117,11 @@ class Explicatio(cmd.Cmd):
                 )
             )
             pass
+        except textract.exceptions.MissingFileError:
+            pass
 
     def do_showcontents(self, arg):
+        'Show the contents of the file that explicatio is working with.'
         if self.filename is not None:
             print(self.data)
         else:
@@ -182,13 +185,22 @@ class Explicatio(cmd.Cmd):
         'Get a frequency distribution.'
 
         freq_dist = FreqDist(self.corpus)
-        dist = freq_dist.most_common(int(arg))
-        print(f'\nShowing top {arg} words')
-        print('Word'.ljust(25) + 'Count')
-        for item in dist:
-            print(item[0].ljust(25), end='')
-            print(str(item[1]).ljust(25))
-        print('\n')
+        try:
+            dist = freq_dist.most_common(int(arg))
+            print(f'\nShowing top {arg} words')
+            print('Word'.ljust(25) + 'Count')
+            for item in dist:
+                print(item[0].ljust(25), end='')
+                print(str(item[1]).ljust(25))
+            print('\n')
+        except ValueError:
+            print(
+                stylize(
+                    'An error occurred. Please make sure to provide '
+                    'a number.\n',
+                    colored.fg('red')
+                )
+            )
 
     def do_posgraph(self, arg):
         'Generate a graph of parts of speech'
@@ -211,6 +223,7 @@ class Explicatio(cmd.Cmd):
         tree.draw()
 
     def do_about(self, arg):
+        'About explicatio'
         print(f'Version: {VERSION}')
 
     def do_quit(self, arg):
