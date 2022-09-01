@@ -5,6 +5,7 @@ import cmd
 from collections import Counter
 import mimetypes
 import os
+import platform
 import sys
 import tkinter
 from tkinter import filedialog as fd
@@ -19,7 +20,21 @@ from nltk import tokenize, FreqDist
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import textract
 
-VERSION = '2022.08'
+# Custom modules
+try:
+    import explicatio.version
+except ModuleNotFoundError:
+    import version
+
+# VERSION = '2022.08'
+try:
+    VERSION = explicatio.version.__version__
+    NLTK_VERSION = explicatio.version.nltk_version
+except NameError:
+    VERSION = version.__version__
+    NLTK_VERSION = version.nltk_version
+
+PY_VERSION = platform.python_version()
 
 # A lot of the following was supported by the following:
 #   - https://realpython.com/nltk-nlp-python/
@@ -225,6 +240,8 @@ class Explicatio(cmd.Cmd):
     def do_about(self, arg):
         'About explicatio'
         print(f'Version: {VERSION}')
+        print(f'  NLTK: {NLTK_VERSION}')
+        print(f'  Python: {PY_VERSION}')
 
     def do_quit(self, arg):
         'Quit explicatio'
@@ -241,8 +258,9 @@ if __name__ == '__main__':
     # Quick and easy way to see if NLTK data is downloaded.
     if os.path.exists(nltk.data.path[0]) is False:
         spinner = Halo(
-            text='Natural language data not found. Downloading to '
-                 f'{nltk.data.path[0]}...',
+            text='NLTK data not found. Downloading to '
+                 f'{nltk.data.path[0]}. '
+                 'This may take a while.',
             text_color='red',
             spinner='bouncingBall'
         )

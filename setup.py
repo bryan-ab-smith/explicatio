@@ -1,6 +1,9 @@
 import setuptools
 
-VERSION = '2022.08'
+import explicatio.version
+
+# VERSION = '2022.08'
+VERSION = explicatio.version.__version__
 
 setuptools.setup(
     name="Explicatio",

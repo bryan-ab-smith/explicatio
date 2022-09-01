@@ -1,1 +1,5 @@
-__version__ = '2022.08'
+import nltk
+
+__version__ = '2022.8'
+
+nltk_version = nltk.__version__
