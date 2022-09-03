@@ -1,3 +1,17 @@
+Metadata-Version: 2.1
+Name: Explicatio
+Version: 0.0.1
+Summary: A simple analysis tool for text.
+Home-page: http://github.com/bryan-ab-smith/explicatio
+Author: Bryan Smith
+Author-email: bryanabsmith@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
 ## Explicatio
 
 Explicatio (noun): Latin for "explanation"
@@ -20,9 +34,11 @@ If you want to run this without installing, run explicatio like so:
 #### Packaging
 Packaging explicatio as a Python wheel is as easy as running the build script:
 
-    python3 -m build
+    sh build.sh
 
-The resulting wheel will be in dist/
+NOTE: The build script is macOS/Linux/*nix only. On Windows, you will need to run the setup script yourself and clean up the build directories:
+
+    python3 setup.py bdist_wheel
 
 
 ### Licence

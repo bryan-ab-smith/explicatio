@@ -1,0 +1,5 @@
+colored
+halo
+matplotlib
+nltk
+textract

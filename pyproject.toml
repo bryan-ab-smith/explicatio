@@ -1,0 +1,5 @@
+# https://lynn-kwong.medium.com/how-to-configure-build-and-deploy-your-python-projects-to-pypi-dac40803fdf
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
