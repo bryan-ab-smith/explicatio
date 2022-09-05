@@ -1,3 +1,5 @@
 explicatio/__pycache__/
 Explicatio-*
-settings.json
+Explicatio.egg-info
+.vscode/
+dist/

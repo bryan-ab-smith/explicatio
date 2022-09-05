@@ -20,20 +20,8 @@ from nltk import tokenize, FreqDist
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import textract
 
-# Custom modules
-try:
-    import explicatio.version
-except ModuleNotFoundError:
-    import version
-
-# VERSION = '2022.08'
-try:
-    VERSION = explicatio.version.__version__
-    NLTK_VERSION = explicatio.version.nltk_version
-except NameError:
-    VERSION = version.__version__
-    NLTK_VERSION = version.nltk_version
-
+__version__ = '2022.8'
+NLTK_VERSION = nltk.__version__
 PY_VERSION = platform.python_version()
 
 # A lot of the following was supported by the following:
@@ -239,7 +227,7 @@ class Explicatio(cmd.Cmd):
 
     def do_about(self, arg):
         'About explicatio'
-        print(f'Version: {VERSION}')
+        print(f'Version: {__version__}')
         print(f'  NLTK: {NLTK_VERSION}')
         print(f'  Python: {PY_VERSION}')
 
