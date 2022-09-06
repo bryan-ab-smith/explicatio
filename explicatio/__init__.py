@@ -113,6 +113,11 @@ class Explicatio(cmd.Cmd):
                     colored.fg('red')
                 )
             )
+
+            self.prompt = stylize(
+                f'[explicatio -> {self.filename}] ',
+                colored.fg('cyan')
+            )
         except FileNotFoundError:
             print(
                 stylize(
@@ -229,16 +234,21 @@ class Explicatio(cmd.Cmd):
     def do_summary(self, arg):
         'Summarise a text'
 
+        spinner = Halo(
+            text='Summarising. Please wait as this may take a while...\n',
+            text_color='yellow',
+            spinner='bouncingBall'
+        )
+        spinner.start()
         # https://huggingface.co/facebook/bart-large-cnn
         summarizer = pipeline('summarization', model='facebook/bart-large-cnn')
-        print(
-            summarizer(
-                self.data,
-                max_length=150,
-                min_length=30,
-                do_sample=False
-            )
-        )
+        print('\n',
+              summarizer(
+                    self.data,
+                    truncation=True
+                )[0]['summary_text']
+              )
+        spinner.stop()
 
     def do_about(self, arg):
         'About explicatio'
