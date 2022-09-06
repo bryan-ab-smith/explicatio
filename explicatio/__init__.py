@@ -13,6 +13,7 @@ from tkinter import filedialog as fd
 # Third party modules
 import colored
 from colored import stylize
+from transformers import pipeline
 from halo import Halo
 from matplotlib import pyplot as plt
 import nltk
@@ -224,6 +225,20 @@ class Explicatio(cmd.Cmd):
         pos = nltk.pos_tag(self.word_tokens)
         tree = nltk.ne_chunk(pos)
         tree.draw()
+
+    def do_summary(self, arg):
+        'Summarise a text'
+
+        # https://huggingface.co/facebook/bart-large-cnn
+        summarizer = pipeline('summarization', model='facebook/bart-large-cnn')
+        print(
+            summarizer(
+                self.data,
+                max_length=150,
+                min_length=30,
+                do_sample=False
+            )
+        )
 
     def do_about(self, arg):
         'About explicatio'
