@@ -2,6 +2,7 @@
 
 # Built-ins
 import cmd
+import configparser
 from collections import Counter
 import mimetypes
 import os
@@ -25,6 +26,9 @@ __version__ = '2022.8'
 NLTK_VERSION = nltk.__version__
 PY_VERSION = platform.python_version()
 
+config = configparser.ConfigParser()
+config.read('config.ini')
+
 # A lot of the following was supported by the following:
 #   - https://realpython.com/nltk-nlp-python/
 
@@ -41,6 +45,8 @@ class Explicatio(cmd.Cmd):
     filename = None
     data = ''
     word_tokens = []
+
+    summary_model = config['MODELS']['summarisation']
 
     def do_load(self, arg):
         'Load a file for analysis'
@@ -241,7 +247,7 @@ class Explicatio(cmd.Cmd):
         )
         spinner.start()
         # https://huggingface.co/facebook/bart-large-cnn
-        summarizer = pipeline('summarization', model='facebook/bart-large-cnn')
+        summarizer = pipeline('summarization', model=self.summary_model)
         print('\n',
               summarizer(
                     self.data,
@@ -250,11 +256,24 @@ class Explicatio(cmd.Cmd):
               )
         spinner.stop()
 
+    def do_config(self, arg):
+        args = arg.split()
+        config[args[0]][args[1]] = args[2]
+        with open('config.ini', 'w') as conf:
+            config.write(conf)
+        print(
+            stylize(
+                'Restart explicatio to load saved changes.',
+                colored.fg('red')
+            )
+        )
+
     def do_about(self, arg):
         'About explicatio'
         print(f'Version: {__version__}')
         print(f'  NLTK: {NLTK_VERSION}')
         print(f'  Python: {PY_VERSION}')
+        print(f'  Summarisation model: {self.summary_model}')
 
     def do_quit(self, arg):
         'Quit explicatio'
