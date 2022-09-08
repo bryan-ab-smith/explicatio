@@ -7,6 +7,7 @@ from collections import Counter
 import mimetypes
 import os
 import platform
+import site
 import sys
 import tkinter
 from tkinter import filedialog as fd
@@ -22,12 +23,9 @@ from nltk import tokenize, FreqDist
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import textract
 
-__version__ = '2022.8'
+__version__ = '2022.9'
 NLTK_VERSION = nltk.__version__
 PY_VERSION = platform.python_version()
-
-config = configparser.ConfigParser()
-config.read('config.ini')
 
 # A lot of the following was supported by the following:
 #   - https://realpython.com/nltk-nlp-python/
@@ -45,6 +43,11 @@ class Explicatio(cmd.Cmd):
     filename = None
     data = ''
     word_tokens = []
+
+    config = configparser.ConfigParser()
+    # https://stackoverflow.com/a/595315
+    config_path = os.path.abspath(os.path.dirname(__file__))
+    config.read(f'{config_path}/config.ini')
 
     summary_model = config['MODELS']['summarisation']
 
@@ -258,9 +261,9 @@ class Explicatio(cmd.Cmd):
 
     def do_config(self, arg):
         args = arg.split()
-        config[args[0]][args[1]] = args[2]
-        with open('config.ini', 'w') as conf:
-            config.write(conf)
+        self.config[args[0]][args[1]] = args[2]
+        with open(f'{self.config_path}/config.ini', 'w') as conf:
+            self.config.write(conf)
         print(
             stylize(
                 'Restart explicatio to load saved changes.',
@@ -270,9 +273,24 @@ class Explicatio(cmd.Cmd):
 
     def do_about(self, arg):
         'About explicatio'
-        print(f'Version: {__version__}')
+        print(
+            stylize(
+                'Versions',
+                colored.fg('spring_green_1')
+            )
+        )
+        print(f'Explicatio: {__version__}')
         print(f'  NLTK: {NLTK_VERSION}')
         print(f'  Python: {PY_VERSION}')
+        
+        print(
+            stylize(
+                '\nConfiguration',
+                colored.fg('spring_green_1')
+            )
+        )
+        
+        print(f'File: {self.config_path}/config.ini')
         print(f'  Summarisation model: {self.summary_model}')
 
     def do_quit(self, arg):
