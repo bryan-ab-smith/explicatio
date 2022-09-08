@@ -7,7 +7,6 @@ from collections import Counter
 import mimetypes
 import os
 import platform
-import site
 import sys
 import tkinter
 from tkinter import filedialog as fd
@@ -282,14 +281,14 @@ class Explicatio(cmd.Cmd):
         print(f'Explicatio: {__version__}')
         print(f'  NLTK: {NLTK_VERSION}')
         print(f'  Python: {PY_VERSION}')
-        
+
         print(
             stylize(
                 '\nConfiguration',
                 colored.fg('spring_green_1')
             )
         )
-        
+
         print(f'File: {self.config_path}/config.ini')
         print(f'  Summarisation model: {self.summary_model}')
 
