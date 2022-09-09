@@ -14,7 +14,7 @@ from tkinter import filedialog as fd
 # Third party modules
 import colored
 from colored import stylize
-from transformers import pipeline, AutoModelForQuestionAnswering, AutoTokenizer
+from transformers import pipeline
 from halo import Halo
 from matplotlib import pyplot as plt
 import nltk
@@ -253,7 +253,7 @@ class Explicatio(cmd.Cmd):
 
     def do_question(self, arg):
         'Ask a quetsion of the corpus'
-        
+
         print(f'Using {self.question_model} model...')
         print(f'Answering the question, "{arg}"')
         answerer = pipeline(
