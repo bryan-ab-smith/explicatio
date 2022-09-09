@@ -14,7 +14,7 @@ from tkinter import filedialog as fd
 # Third party modules
 import colored
 from colored import stylize
-from transformers import pipeline
+from transformers import pipeline, AutoModelForQuestionAnswering, AutoTokenizer
 from halo import Halo
 from matplotlib import pyplot as plt
 import nltk
@@ -49,6 +49,7 @@ class Explicatio(cmd.Cmd):
     config.read(f'{config_path}/config.ini')
 
     summary_model = config['MODELS']['summarisation']
+    question_model = config['MODELS']['question']
 
     def do_load(self, arg):
         'Load a file for analysis'
@@ -231,14 +232,6 @@ class Explicatio(cmd.Cmd):
         plt.bar(count.keys(), count.values())
         plt.show()
 
-    def do_nerec(self, arg):
-        'Named entity recognition tree building'
-        # Broken for now.
-
-        pos = nltk.pos_tag(self.word_tokens)
-        tree = nltk.ne_chunk(pos)
-        tree.draw()
-
     def do_summary(self, arg):
         'Summarise a text'
 
@@ -257,6 +250,25 @@ class Explicatio(cmd.Cmd):
                 )[0]['summary_text']
               )
         spinner.stop()
+
+    def do_question(self, arg):
+        'Ask a quetsion of the corpus'
+        
+        print(f'Using {self.question_model} model...')
+        print(f'Answering the question, "{arg}"')
+        answerer = pipeline(
+            'question-answering',
+            model=self.question_model,
+            tokenizer=self.question_model
+        )
+
+        question = {
+            'question': arg,
+            'context': self.data
+        }
+
+        result = answerer(question)
+        print(result)
 
     def do_config(self, arg):
         args = arg.split()
@@ -291,6 +303,7 @@ class Explicatio(cmd.Cmd):
 
         print(f'File: {self.config_path}/config.ini')
         print(f'  Summarisation model: {self.summary_model}')
+        print(f'  Question (and answer) model: {self.question_model}')
 
     def do_quit(self, arg):
         'Quit explicatio'

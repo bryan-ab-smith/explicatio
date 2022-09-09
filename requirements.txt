@@ -2,6 +2,8 @@ colored==1.4.3
 halo==0.0.31
 matplotlib==3.5.3
 nltk==3.7
+protobuf==4.21.5
+sentencepiece==0.1.97
 textract==1.6.5
 torch==1.12.1
 transformers==4.21.3
