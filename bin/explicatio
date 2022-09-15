@@ -19,6 +19,6 @@ if os.path.exists(nltk.data.path[0]) is False:
     spinner.start()
     # Download all NLTK data just in case
     # Thanks to https://stackoverflow.com/a/47616241
-    nltk.download('all', quiet=True)
+    nltk.download('popular', quiet=True)
     spinner.stop()
 Explicatio().cmdloop()

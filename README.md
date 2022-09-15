@@ -31,8 +31,12 @@ Packaging explicatio as a Python wheel is as easy as running the build script:
 
 The resulting wheel will be in dist/.
 
-If you're on a machine with ZSH support, you can also run the `build.sh`3 script which runs the build command and cleans up the source directory a bit.
+If you're on a machine with ZSH support, you can also run the `build.sh` script which runs the build command and cleans up the source directory a bit.
 
+#### Building
+The app is not really designed to be compiled but it should work with Nuitka:
+
+    python3 -m nuitka __init__.py --onefile --enable-plugin=tk-inter
 
 ### Licence
 

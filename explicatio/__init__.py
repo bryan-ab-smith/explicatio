@@ -51,6 +51,14 @@ class Explicatio(cmd.Cmd):
     summary_model = config['MODELS']['summarisation']
     question_model = config['MODELS']['question']
 
+    def reportError(self, text):
+        print(
+            stylize(
+                f'[ERROR] {text}',
+                colored.fg('red')
+            )
+        )
+
     def do_load(self, arg):
         'Load a file for analysis'
         if arg != '':
@@ -66,10 +74,6 @@ class Explicatio(cmd.Cmd):
             root.destroy()
 
         try:
-            '''with open(self.filename) as f:
-                self.data = f.read()
-                self.word_tokens = nltk.word_tokenize(self.data)
-                self.corpus = nltk.Text(self.word_tokens)'''
             self.data = textract.process(self.filename, encoding='utf-8')
             self.data = self.data.decode('utf-8')
             self.word_tokens = nltk.word_tokenize(self.data)
@@ -127,28 +131,18 @@ class Explicatio(cmd.Cmd):
                 f'[explicatio -> {self.filename}] ',
                 colored.fg('cyan')
             )
-        except FileNotFoundError:
-            print(
-                stylize(
-                    f'! {self.filename} was not found',
-                    colored.fg('red')
-                )
-            )
-            pass
-        except textract.exceptions.MissingFileError:
-            pass
+        except (
+            FileNotFoundError,
+            textract.exceptions.MissingFileError
+        ):
+            self.reportError(f'{self.filename} was not found')
 
     def do_showcontents(self, arg):
         'Show the contents of the file that explicatio is working with.'
         if self.filename is not None:
             print(self.data)
         else:
-            print(
-                stylize(
-                    '[ERROR] Please load a file first.',
-                    colored.fg('red')
-                )
-            )
+            self.reportError('Please load a file first.')
 
     def do_sentiment(self, arg):
         'Run a quick sentiment analysis'
@@ -177,12 +171,7 @@ class Explicatio(cmd.Cmd):
                 ),
             )
         else:
-            print(
-                stylize(
-                    '[ERROR] Please load a file first.',
-                    colored.fg('red')
-                )
-            )
+            self.reportError('Please load a file first.')
 
     def do_dispersion(self, arg):
         'Do a quick dispersion plot for words'
@@ -193,7 +182,12 @@ class Explicatio(cmd.Cmd):
     def do_concordance(self, arg):
         'Run a quick concordance with the argument as the keyword'
         args = arg.split()
-        self.corpus.concordance(args[0], lines=args[1])
+        try:
+            self.corpus.concordance(args[0], width=80, lines=int(args[1]))
+        except AttributeError:
+            self.reportError('Please load a file first.')
+        except IndexError:
+            self.reportError('An argument is missing. Plese try again.')
 
     def do_collocations(self, arg):
         'Find collocations in the text'
@@ -329,7 +323,7 @@ if __name__ == '__main__':
         spinner.start()
         # Download all NLTK data just in case
         # Thanks to https://stackoverflow.com/a/47616241
-        nltk.download('all', quiet=True)
+        nltk.download('popular', quiet=True)
         spinner.stop()
     try:
         e = Explicatio().cmdloop()
