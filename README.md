@@ -36,7 +36,9 @@ If you're on a machine with ZSH support, you can also run the `build.sh` script 
 #### Building
 The app is not really designed to be compiled but it should work with Nuitka:
 
-    python3 -m nuitka __init__.py --onefile --enable-plugin=tk-inter
+    export TCL_LIBRARY=<path to TCL-TK> && export TK_LIBRARY=<path to TCL-TK> && python3 -m nuitka __init__.py --onefile --enable-plugin=tk-inter --enable-plugin=numpy
+
+For this to work, TCL (tcl-tk through Homebrew on macOS) and a C compiler (eg. gcc, clang) need to be installed.
 
 ### Licence
 

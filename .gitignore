@@ -3,3 +3,7 @@ Explicatio-*
 Explicatio.egg-info
 .vscode/
 dist/
+explicatio/__init__.build
+explicatio/__init__.dist
+explicatio/.DS_Store
+.DS_Store
