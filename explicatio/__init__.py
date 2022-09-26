@@ -8,6 +8,8 @@ import mimetypes
 import os
 import platform
 import sys
+# https://stackoverflow.com/a/25823885
+from timeit import default_timer as timer
 import tkinter
 from tkinter import filedialog as fd
 
@@ -246,10 +248,30 @@ class Explicatio(cmd.Cmd):
         spinner.stop()
 
     def do_question(self, arg):
-        'Ask a quetsion of the corpus'
+        '''
+        Ask a question of the corpus
+        Argument:
+            the question itself
+        Example:
+            question Who is Dracula?
+        '''
 
-        print(f'Using {self.question_model} model...')
-        print(f'Answering the question, "{arg}"')
+        print(
+                stylize(
+                    f'Using {self.question_model} model.\n'
+                    f'Answering the question, "{arg}"',
+                    colored.fg('blue')
+                )
+            )
+
+        spinner = Halo(
+            text='Please wait',
+            text_color='yellow',
+            spinner='bouncingBall'
+        )
+        spinner.start()
+
+        start = timer()
         answerer = pipeline(
             'question-answering',
             model=self.question_model,
@@ -262,7 +284,13 @@ class Explicatio(cmd.Cmd):
         }
 
         result = answerer(question)
-        print(result)
+        end = timer()
+        spinner.stop()
+
+        score = result['score']
+        answer = result['answer']
+        print(f'The answer is {answer}. I am {score*100:.2f}% confident.')
+        print(f'Elapsed time: {end-start:.2f} seconds.')
 
     def do_config(self, arg):
         args = arg.split()
