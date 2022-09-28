@@ -24,6 +24,7 @@ from nltk import tokenize, FreqDist
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import textract
 
+# Version numbering.
 __version__ = '2022.9'
 NLTK_VERSION = nltk.__version__
 PY_VERSION = platform.python_version()
