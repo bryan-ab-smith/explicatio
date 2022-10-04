@@ -24,6 +24,7 @@ from nltk import tokenize, FreqDist
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import textract
 
+# Version numbering.
 __version__ = '2022.9'
 NLTK_VERSION = nltk.__version__
 PY_VERSION = platform.python_version()
@@ -149,10 +150,12 @@ class Explicatio(cmd.Cmd):
     def do_sentiment(self, arg):
         'Run a quick sentiment analysis'
         if self.filename is not None:
+            start = timer()
             sents = tokenize.sent_tokenize(self.data)
             # https://www.nltk.org/howto/sentiment.html
             sid = SentimentIntensityAnalyzer()
             scores = sid.polarity_scores(sents[2])
+            end = timer()
             print(
                 '[Sentiment Scores (Vader)]\n',
                 stylize(
@@ -172,6 +175,7 @@ class Explicatio(cmd.Cmd):
                     colored.fg('blue')
                 ),
             )
+            print(f'Elapsed time: {end-start:.2f} seconds.')
         else:
             self.reportError('Please load a file first.')
 
@@ -237,15 +241,18 @@ class Explicatio(cmd.Cmd):
             spinner='bouncingBall'
         )
         spinner.start()
+        start = timer()
         # https://huggingface.co/facebook/bart-large-cnn
         summarizer = pipeline('summarization', model=self.summary_model)
-        print('\n',
+        end = timer()
+        print('\n\n',
               summarizer(
                     self.data,
                     truncation=True
                 )[0]['summary_text']
               )
         spinner.stop()
+        print(f'Elapsed time: {end-start:.2f} seconds.')
 
     def do_question(self, arg):
         '''
