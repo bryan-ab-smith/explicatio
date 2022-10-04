@@ -25,7 +25,7 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import textract
 
 # Version numbering.
-__version__ = '2022.9'
+__version__ = '2022.10'
 NLTK_VERSION = nltk.__version__
 PY_VERSION = platform.python_version()
 
