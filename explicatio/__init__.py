@@ -22,10 +22,11 @@ from matplotlib import pyplot as plt
 import nltk
 from nltk import tokenize, FreqDist
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import requests
 import textract
 
 # Version numbering.
-__version__ = '2022.10'
+__version__ = 1.0
 NLTK_VERSION = nltk.__version__
 PY_VERSION = platform.python_version()
 
@@ -34,6 +35,21 @@ PY_VERSION = platform.python_version()
 
 
 class Explicatio(cmd.Cmd):
+
+    ver_check = requests.get('https://bryanabsmith.com/explicatio/version.txt')
+    ver_check = float(ver_check.text)
+
+    if ver_check > __version__:
+        print(
+            stylize(
+                'Your version of explicatio is out of date. Version'
+                f' {ver_check} is available.\n'
+                'Head over to the explicatio homepage for upgrade'
+                ' instructions.\n',
+                colored.fg('yellow')
+            )
+        )
+
     intro = stylize(
         'Welcome to the explicatio shell. Type help or ? to list commands.\n',
         colored.fg('green')
