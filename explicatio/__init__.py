@@ -36,16 +36,34 @@ PY_VERSION = platform.python_version()
 
 class Explicatio(cmd.Cmd):
 
-    ver_check = requests.get('https://bryanabsmith.com/explicatio/version.txt')
-    ver_check = float(ver_check.text)
+    try:
+        ver_check = requests.get(
+            'https://bryanabsmith.com/explicatio/version.txt'
+        )
+        ver_check = float(ver_check.text)
 
-    if ver_check > __version__:
+        if ver_check > __version__:
+            print(
+                stylize(
+                    'Your version of explicatio is out of date. Version'
+                    f' {ver_check} is available.\n'
+                    'Head over to the explicatio homepage for upgrade'
+                    ' instructions.\n',
+                    colored.fg('yellow')
+                )
+            )
+        else:
+            print(
+                stylize(
+                    '\U0001F44F Your version of explicatio is up to date.',
+                    colored.fg('green')
+                )
+            )
+    except requests.exceptions.ConnectionError:
         print(
             stylize(
-                'Your version of explicatio is out of date. Version'
-                f' {ver_check} is available.\n'
-                'Head over to the explicatio homepage for upgrade'
-                ' instructions.\n',
+                '! Can\'t see if you\'re up to date. A check will be run next'
+                ' time you open explicatio.',
                 colored.fg('yellow')
             )
         )
