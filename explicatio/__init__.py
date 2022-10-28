@@ -392,7 +392,7 @@ if __name__ == '__main__':
         spinner.start()
         # Download all NLTK data just in case
         # Thanks to https://stackoverflow.com/a/47616241
-        nltk.download('popular', quiet=True)
+        nltk.download('all', quiet=True)
         spinner.stop()
     try:
         e = Explicatio().cmdloop()
