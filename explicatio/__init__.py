@@ -26,6 +26,7 @@ import requests
 import textract
 
 # Version numbering.
+__version__ = '2022.10'
 __version__ = 1.0
 NLTK_VERSION = nltk.__version__
 PY_VERSION = platform.python_version()
