@@ -21,6 +21,7 @@ from halo import Halo
 from matplotlib import pyplot as plt
 import nltk
 from nltk import tokenize, FreqDist
+from nltk.corpus import stopwords
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import requests
 import textract
@@ -115,7 +116,17 @@ class Explicatio(cmd.Cmd):
             self.data = textract.process(self.filename, encoding='utf-8')
             self.data = self.data.decode('utf-8')
             self.word_tokens = nltk.word_tokenize(self.data)
+            # https://www.geeksforgeeks.org/removing-stop-words-nltk-python/
+            stop_words = set(stopwords.words('english'))
+            self.corpus_no_stopwords = [
+                word for word in self.word_tokens if not word.lower()
+                in stop_words
+            ]
             self.corpus = nltk.Text(self.word_tokens)
+            # Below is the corpus without stop words
+            # This performs worse than the regular corpus in FreqDist
+            # So, it has been held back for now
+            # self.corpus = nltk.Text(self.corpus_no_stopwords)
             print(f'Loaded {self.filename}')
 
             if mimetypes.guess_type(self.filename)[0] != 'text/plain':
@@ -150,9 +161,14 @@ class Explicatio(cmd.Cmd):
                     colored.fg('green')
                 )
             )
+            unique_percent = round(
+                (unique_words_text/words_text)*100,
+                2
+            )
             print(
                 stylize(
-                    f'  Unique Words: {unique_words_text:,}',
+                    f'  Unique Words: {unique_words_text:,} '
+                    f'({unique_percent}%)',
                     colored.fg('green')
                 )
             )
