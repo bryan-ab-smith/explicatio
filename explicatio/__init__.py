@@ -99,7 +99,9 @@ class Explicatio(cmd.Cmd):
         )
 
     def do_load(self, arg):
-        'Load a file for analysis'
+        '''         Load a file for analysis.
+        Usage: load <path and name of file>
+        '''
         if arg != '':
             print(f'Loading {arg}...')
             self.filename = arg
