@@ -25,6 +25,7 @@ from nltk.corpus import stopwords
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import requests
 import textract
+import wx
 
 # Version numbering.
 __version__ = '2022.10'
@@ -99,8 +100,9 @@ class Explicatio(cmd.Cmd):
         )
 
     def do_load(self, arg):
-        '''         Load a file for analysis.
+        '''Load a file for analysis.
         Usage: load <path and name of file>
+        Example: load dracula.txt
         '''
         if arg != '':
             print(f'Loading {arg}...')
@@ -194,14 +196,24 @@ class Explicatio(cmd.Cmd):
             self.reportError(f'{self.filename} was not found')
 
     def do_showcontents(self, arg):
-        'Show the contents of the file that explicatio is working with.'
+        '''Show the contents of the file that explicatio is working with.
+        Usage: showcontents
+        '''
         if self.filename is not None:
             print(self.data)
         else:
             self.reportError('Please load a file first.')
 
     def do_sentiment(self, arg):
-        'Run a quick sentiment analysis'
+        '''Run a quick sentiment analysis. The output is a series of values.
+        Usage: sentiment
+        Output:
+            - Negative: the negative score.
+            - Positive: the positive score.
+            - Neutral: the neutral score.
+            - Compound: the compound score (what you're likely looking for).
+        '''
+
         if self.filename is not None:
             start = timer()
             sents = tokenize.sent_tokenize(self.data)
