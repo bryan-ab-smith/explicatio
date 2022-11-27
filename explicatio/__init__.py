@@ -21,11 +21,9 @@ from halo import Halo
 from matplotlib import pyplot as plt
 import nltk
 from nltk import tokenize, FreqDist
-from nltk.corpus import stopwords
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import requests
 import textract
-import wx
 
 # Version numbering.
 __version__ = '2022.10'
@@ -72,7 +70,8 @@ class Explicatio(cmd.Cmd):
         )
 
     intro = stylize(
-        'Welcome to the explicatio shell. Type help or ? to list commands.\n',
+        '\nWelcome to the explicatio shell.'
+        'Type help or ? to list commands.\n',
         colored.fg('green')
     )
     prompt = stylize(
@@ -100,10 +99,28 @@ class Explicatio(cmd.Cmd):
         )
 
     def do_load(self, arg):
-        '''Load a file for analysis.
-        Usage: load <path and name of file>
-        Example: load dracula.txt
         '''
+        Load a file for analysis.
+
+        You can pass anything that is supported by textract. This is a flexible
+        library that can import a lot of content but you are strongly
+        encouraged to ensure that the file is loaded as you wish by executing
+        showcontents.
+
+        Parameters:
+            - filename: This must be a resolvable path to the file. If in
+                        doubt, use an absolute file path.
+
+        Usage:
+            load <filename>
+
+        Output:
+            None.
+
+        Example:
+            load dracula.txt
+        '''
+
         if arg != '':
             print(f'Loading {arg}...')
             self.filename = arg
@@ -121,11 +138,11 @@ class Explicatio(cmd.Cmd):
             self.data = self.data.decode('utf-8')
             self.word_tokens = nltk.word_tokenize(self.data)
             # https://www.geeksforgeeks.org/removing-stop-words-nltk-python/
-            stop_words = set(stopwords.words('english'))
+            '''stop_words = set(stopwords.words('english'))
             self.corpus_no_stopwords = [
                 word for word in self.word_tokens if not word.lower()
                 in stop_words
-            ]
+            ]'''
             self.corpus = nltk.Text(self.word_tokens)
             # Below is the corpus without stop words
             # This performs worse than the regular corpus in FreqDist
@@ -196,22 +213,57 @@ class Explicatio(cmd.Cmd):
             self.reportError(f'{self.filename} was not found')
 
     def do_showcontents(self, arg):
-        '''Show the contents of the file that explicatio is working with.
-        Usage: showcontents
         '''
+        Show the contents of the file that explicatio is working with.
+
+        This is helpful to ensure that explicatio is working with the
+        text in a form that you accept for analysis. If you import a
+        text, it is possible for parts to be excluded or converted in
+        a way that challenges accurate analysis. This function gives
+        you the chance to make sure that you and explicatio are
+        worlking with the same text.
+
+        Parameters:
+            None.
+
+        Usage:
+            showcontents
+
+        Output:
+            The contents of the file.
+
+        Example:
+            showcontents
+        '''
+
         if self.filename is not None:
             print(self.data)
         else:
             self.reportError('Please load a file first.')
 
     def do_sentiment(self, arg):
-        '''Run a quick sentiment analysis. The output is a series of values.
-        Usage: sentiment
+        '''
+        Run a sentiment analysis on the text.
+
+        This can be used to give you a sense of the emotional tone of
+        the text. The function returns four values, one of which
+        consolidates the other three to give you an overall score for
+        the sentiment expressed in the text.
+
+        Parameters:
+            None.
+
+        Usage:
+            sentiment
+
         Output:
             - Negative: the negative score.
             - Positive: the positive score.
             - Neutral: the neutral score.
             - Compound: the compound score (what you're likely looking for).
+
+        Example:
+            sentiment
         '''
 
         if self.filename is not None:
@@ -245,13 +297,60 @@ class Explicatio(cmd.Cmd):
             self.reportError('Please load a file first.')
 
     def do_dispersion(self, arg):
-        'Do a quick dispersion plot for words'
+        '''
+        Run a dispersion plot.
+
+        This can be used to see where a list of words are in the text
+        and compare them against each other. In effect, this shows you
+        the spread of words across a text and in allowing you to do
+        this with multiple words, you can see how the spread of various
+        word compare.
+
+        Parameters:
+            - list_of_words: A semi-colon delimited set of words.
+
+        Usage:
+            dispersion <list_of_words>
+
+        Output:
+            A graph that shows the dispersion of the semi-colon delimited
+            list of words.
+
+        Example:
+            dispersion Dracula;vampire
+        '''
         args = arg.split(';')
 
         self.corpus.dispersion_plot(args)
 
     def do_concordance(self, arg):
-        'Run a quick concordance with the argument as the keyword'
+        '''
+        Run a concordance.
+
+        This can be used to see where a word is sitauted in the text
+        with the context around it. Running a concordance can thus
+        provide insight into the contextual use of the word by
+        providing a sense of the words before and after it.
+
+        Parameters:
+            - word: The word to run the concordance on.
+            - num_results: Number of results to show. It is
+                           possible that the number of results shown
+                           will be lower than the value provided here
+                           if there are fewer results than the value
+                           requested.
+
+        Usage:
+            dispersion <word> <num_results>
+
+        Output:
+            A list of <num_results> number of phrases where <word> is in
+            the middle.
+
+        Example:
+            concordance dracula 10
+        '''
+
         args = arg.split()
         try:
             self.corpus.concordance(args[0], width=80, lines=int(args[1]))
@@ -261,11 +360,53 @@ class Explicatio(cmd.Cmd):
             self.reportError('An argument is missing. Plese try again.')
 
     def do_collocations(self, arg):
-        'Find collocations in the text'
-        self.corpus.collocations()
+        '''
+        Run a collocation.
+
+        This can be used to see what words are commonly collocated
+        (or co-located) with each other. This can help with finding
+        common noun phrases for example.
+
+        Parameters:
+            None.
+
+        Usage:
+            collocation
+
+        Output:
+            A list of collocated words.
+
+        Example:
+            collocation
+        '''
+
+        try:
+            self.corpus.collocations()
+        except AttributeError:
+            self.reportError(
+                'It would appear that a corpus isn\'t available. Have you'
+                ' loaded a file?'
+            )
 
     def do_freqdist(self, arg):
-        'Get a frequency distribution.'
+        '''
+        Run a frequency distribution.
+
+        This can be used to see what the most common words are in a corpus.
+
+        Parameters:
+            - num_words: The number of words to run a distribution for.
+                         This will set how many "top words" to show.
+
+        Usage:
+            freqdist <num_words>
+
+        Output:
+            A list of the <num_words> most common words.
+
+        Example:
+            freqdist 20
+        '''
 
         freq_dist = FreqDist(self.corpus)
         try:
@@ -273,8 +414,11 @@ class Explicatio(cmd.Cmd):
             print(f'\nShowing top {arg} words')
             print('Word'.ljust(25) + 'Count')
             for item in dist:
+                # The word
                 print(item[0].ljust(25), end='')
-                print(str(item[1]).ljust(25))
+
+                # The count
+                print(str(f'{item[1]:,}').ljust(25))
             print('\n')
         except ValueError:
             print(
@@ -285,6 +429,7 @@ class Explicatio(cmd.Cmd):
                 )
             )
 
+    # This is a disaster right now.
     def do_posgraph(self, arg):
         'Generate a graph of parts of speech'
         # list_pos = []
@@ -298,7 +443,28 @@ class Explicatio(cmd.Cmd):
         plt.show()
 
     def do_summary(self, arg):
-        'Summarise a text'
+        '''
+        Generates a summary of the text.
+
+        This can be used to create a quick sumamry of the text. The
+        quality and speed of this depends on the machine learning model
+        that explicatio is configured to use. See the models > sumamrisation
+        config option.
+
+        Parameters:
+            None.
+
+        Usage:
+            summary
+
+        Output:
+            A summary of the corpus. The length of time it took to generate the
+            summary is also provided as a helpful metric for speed (should you
+            choose to pursue other options).
+
+        Example:
+            summary
+        '''
 
         spinner = Halo(
             text='Summarising. Please wait as this may take a while...\n',
@@ -321,9 +487,25 @@ class Explicatio(cmd.Cmd):
 
     def do_question(self, arg):
         '''
-        Ask a question of the corpus
-        Argument:
-            the question itself
+        Ask a question of the corpus.
+
+        This can be used to quickly "question" the corpus and
+        get an answer back. As this leverages a machine learning model,
+        this should (as always) be taken with a grain of salt.
+
+        Parameters:
+            - query: the question to ask
+
+        Usage:
+            question <query>
+
+        Output:
+            An answer to the <query>. The length of time it took to generate
+            the answer is also provided as a helpful metric for speed (should
+            you choose to pursue other options). A confidence value is also
+            provided to give you a sense of how confident the model is in its
+            answer.
+
         Example:
             question Who is Dracula?
         '''
@@ -365,6 +547,29 @@ class Explicatio(cmd.Cmd):
         print(f'Elapsed time: {end-start:.2f} seconds.')
 
     def do_config(self, arg):
+        '''
+        Set configuration options.
+
+        This can be used to quickly set configuration options. Using this
+        requires you to know which section and property the configuration
+        option can be found. This information is available in the help
+        documentation. The app needs to be restarted for these values to
+        take effect.
+
+        Parameters:
+            - section: the section in which the config property is found
+            - property: the specific property to set
+            - value: the value to set for the property
+
+        Usage:
+            config <section> <property> <value>
+
+        Output:
+            None.
+
+        Example:
+            config MODELS summarisation facebook/bart-large-cnn
+        '''
         args = arg.split()
         self.config[args[0]][args[1]] = args[2]
         with open(f'{self.config_path}/config.ini', 'w') as conf:
