@@ -27,16 +27,19 @@
             padding-bottom: 75pt;
         }
 
-        h5 {
-            margin-top: 3rem;
-        }
-
-        h6 {
-            margin-top: 1.5rem;
-        }
 
         .card-cmd {
             font-family: "Lucida Console", "Courier New", monospace;
+        }
+
+        @media only screen 
+        and (min-width: 375px) 
+        and (max-width: 812px) { 
+
+            img {
+                max-width: 400px;
+            }
+
         }
     </style>
 
@@ -47,13 +50,13 @@
 
     <p></p>
 
-    <h5>About</h5>
+    <h4>About</h4>
     explicatio is a small and simple program to help facilitate text analysis.
 
     <p></p>
 
-    <h5>Install</h5>
-    <h6><i class="bi bi-windows"></i> Windows</h6>
+    <h4 style="padding-top: 2rem;">Install</h4>
+    <h5><i class="bi bi-windows"></i> Windows</h5>
     First, you need to install Python. You can get it <a href='https://www.python.org/downloads/windows/'>here</a>.
     Once Python is installed, you need to open up a command prompt and execute the following:
     <p></p>
@@ -65,7 +68,7 @@
     </div>
 
     <p></p>
-    <h6><i class="bi bi-apple"></i> macOS (and Linux)</h6>
+    <h5><i class="bi bi-apple"></i> macOS (and Linux)</h5>
     If you are running on Linux or a Mac, you've already got Python installed so all you need to do is execute the
     following:
     <p></p>
@@ -77,9 +80,19 @@
 
     <p></p>
 
-    <h5>Usage</h5>
+    <h4 style="padding-top: 2rem;">Usage</h4>
     Using explicatio requires launching it. As a command line tool, you are required to launch it from the command line.
-    <h6><i class="bi bi-apple"></i> macOS</h6>
+    <p></p>
+    <h5><i class="bi bi-windows"></i> Windows</h5>
+    Open up PowerShell, available in the <i>Windows PowerShell</i> folder in the Start menu.
+    <p></p>
+    <div class="card card-cmd text-bg-dark mb-3">
+        <div class="card-body">
+            explicatio
+        </div>
+    </div>
+    <p></p>
+    <h5><i class="bi bi-apple"></i> macOS</h5>
     Open up /Applications/Terminal.app and simply execute explicatio:
     <p></p>
     <div class="card card-cmd text-bg-dark mb-3">
@@ -88,21 +101,17 @@
         </div>
     </div>
 
-    <h6><i class="bi bi-windows"></i> Windows</h6>
-    Open up PowerShell, available in the <i>Windows PowerShell</i> folder in the Start menu.
-    <p></p>
-    <div class="card card-cmd text-bg-dark mb-3">
-        <div class="card-body">
-            explicatio
-        </div>
-    </div>
+    
     <div class="alert alert-danger" role="alert">
         <i class="bi bi-exclamation-octagon"></i> For now, for some reason, this is not working.
       </div>
 
     <p></p>
 
-    <h5>Commands</h5>
+    <h4 style="padding-top: 2rem;">Commands</h4>
+      <span style='color: rgb(156, 197, 251)'>Note: the command examples below are all based on an analysis of the included Dracula text.</span>
+      <p></p>
+    <h5>File Commands</h5>
 
     <!-- Load File -->
     <div class="card text-bg-dark">
@@ -126,6 +135,70 @@
 
                 <dt class="col-sm-3">Output</dt>
                 <dd class="col-sm-9">None.</dd>
+            </dl>
+        </div>
+    </div>
+
+    <p></p>
+
+    <!-- Show Contents -->
+    <div class="card text-bg-dark">
+        <div class="card-body">
+            <span class="lead card-title">Show Contents</span>
+            <h6 class="card-subtitle mb-2 text-muted"><i class="bi bi-terminal"></i> showcontents</h6>
+
+            <dl class="row">
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">Show the contents of the file that explicatio is working with. This is helpful to ensure that explicatio is working with the text in a form that you accept for analysis. If you import a text, it is possible for parts to be excluded or converted in a way that challenges accurate analysis. This function gives you the chance to make sure that you and explicatio are worlking with the same text.</dd>
+
+                <dt class="col-sm-3">Parameters</dt>
+                <dd class="col-sm-9">None</dd>
+
+                <dt class="col-sm-3">Usage</dt>
+                <dd class="col-sm-9"><span class="text-warning">showcontents</span></dd>
+
+                <dt class="col-sm-3">Example</dt>
+                <dd class="col-sm-9">showcontents</dd>
+
+                <dt class="col-sm-3">Output</dt>
+                <dd class="col-sm-9">What explicatio is working with once a file is loaded.</dd>
+            </dl>
+        </div>
+    </div>
+
+    <p></p>
+
+    <h5 style="padding-top: 2rem;">Analytic Commands</h5>
+
+    <!-- Sentiment -->
+    <div class="card text-bg-dark">
+        <div class="card-body">
+            <span class="lead card-title">Sentiment Analysis</span>
+            <h6 class="card-subtitle mb-2 text-muted"><i class="bi bi-terminal"></i> sentiment</h6>
+
+            <dl class="row">
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">Run a sentiment analysis on the text. This can be used to give you a sense of the emotional tone of the text. The function returns four values, one of which consolidates the other three to give you an overall score for the sentiment expressed in the text.</dd>
+
+                <dt class="col-sm-3">Parameters</dt>
+                <dd class="col-sm-9">None</dd>
+
+                <dt class="col-sm-3">Usage</dt>
+                <dd class="col-sm-9"><span class="text-warning">sentiment</span></dd>
+
+                <dt class="col-sm-3">Example</dt>
+                <dd class="col-sm-9">sentiment</dd>
+
+                <dt class="col-sm-3">Output</dt>
+                <dd class="col-sm-9">
+                    Four values: <br \>
+                    <ul>
+                        <li>Negative: the negative score.</li>
+                        <li>Positive: the positive score.</li>
+                        <li>Neutral: the neutral score.</li>
+                        <li>Compound: the compound score (what you're likely looking for).</li>
+                    </ul>
+                </dd>
             </dl>
         </div>
     </div>
@@ -158,6 +231,125 @@
                 <dd class="col-sm-9"><a href="img/dispersion_example.png"><img src="img/dispersion_example.png"
                             class="rounded float-start" alt="Dispersion example."></a></dd>
 
+            </dl>
+        </div>
+    </div>
+
+    <p></p>
+
+    <!-- Concordance -->
+    <div class="card text-bg-dark">
+        <div class="card-body">
+            <span class="lead card-title">Concordance</span>
+            <h6 class="card-subtitle mb-2 text-muted"><i class="bi bi-terminal"></i> concordance</h6>
+
+            <dl class="row">
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">Run a concordance. This can be used to see where a word is sitauted in the text with the context around it. Running a concordance can thus provide insight into the contextual use of the word by providing a sense of the words before and after it.</dd>
+
+                <dt class="col-sm-3">Parameters</dt>
+                <dd class="col-sm-9">
+                    <span class="text-info">word</span>: The word to run the concordance on.
+                    <br \>
+                    <span class="text-info">num_results</span>: Number of results to show. It is possible that the number of results shown will be lower than the value provided here if there are fewer results than the value requested.
+                </dd>
+
+                <dt class="col-sm-3">Usage</dt>
+                <dd class="col-sm-9"><span class="text-warning">concordance</span> [word] [num_results]</dd>
+
+                <dt class="col-sm-3">Example</dt>
+                <dd class="col-sm-9">concordance dracula 10</dd>
+
+                <dt class="col-sm-3">Output</dt>
+                <dd class="col-sm-9 card-cmd">
+                    Displaying 10 of 40 matches:<br \>
+                    The Project Gutenberg eBook of Dracula , by Bram Stoker This eBook is for <br \>
+                    d before using this eBook . Title : Dracula Author : Bram Stoker Release Date :<br \>
+                    TART OF THE PROJECT GUTENBERG EBOOK DRACULA * * * DRACULA _by_ Bram Stoker [ Il<br \>
+                    OJECT GUTENBERG EBOOK DRACULA * * * DRACULA _by_ Bram Stoker [ Illustration : c<br \>
+                    TER XXVII . Mina Harker ' s Journal DRACULA CHAPTER I JONATHAN HARKER 'S JOURNA<br \>
+                    ng the exact locality of the Castle Dracula , as there are no maps of this coun<br \>
+                    ritz , the post town named by Count Dracula , is a fairly well-known place . I <br \>
+                    isted by famine and disease . Count Dracula had directed me to go to the Golden<br \>
+                    eautiful land . `` Your friend , '' DRACULA . '' _4 May._ -- I found that my la<br \>
+                    . When I asked him if he knew Count Dracula , and could tell me anything of his<br \>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <p></p>
+
+    <!-- Concordance -->
+    <div class="card text-bg-dark">
+        <div class="card-body">
+            <span class="lead card-title">Collocations</span>
+            <h6 class="card-subtitle mb-2 text-muted"><i class="bi bi-terminal"></i> collocations</h6>
+
+            <dl class="row">
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">Run a collocation. This can be used to see what words are commonly collocated (or co-located) with each other. This can help with finding common noun phrases for example.</dd>
+
+                <dt class="col-sm-3">Parameters</dt>
+                <dd class="col-sm-9">None.
+                </dd>
+
+                <dt class="col-sm-3">Usage</dt>
+                <dd class="col-sm-9"><span class="text-warning">collocations</span></dd>
+
+                <dt class="col-sm-3">Example</dt>
+                <dd class="col-sm-9">collocations</dd>
+
+                <dt class="col-sm-3">Output</dt>
+                <dd class="col-sm-9 card-cmd">
+                    Van Helsing; Madam Mina; Lord Godalming; Dr. Seward; Project
+                    Gutenberg-tm; Mrs. Harker; Dr. Van; could see; friend John; Mr.
+                    Morris; Project Gutenberg; _Czarina Catherine_; Miss Lucy; United
+                    States; last night; Quincey Morris; Literary Archive; Gutenberg-tm
+                    electronic; Mrs. Westenra; electronic works
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <p></p>
+
+    <!-- Frequency Distribution -->
+    <div class="card text-bg-dark">
+        <div class="card-body">
+            <span class="lead card-title">Frequency Distribution</span>
+            <h6 class="card-subtitle mb-2 text-muted"><i class="bi bi-terminal"></i> freqdist</h6>
+
+            <dl class="row">
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">Run a frequency distribution. This can be used to see what the most common words are in a corpus.</dd>
+
+                <dt class="col-sm-3">Parameters</dt>
+                <dd class="col-sm-9">
+                    <span class="text-info">num_words</span>: The number of words to run a distribution for. This will set how many "top words" to show.
+                </dd>
+
+                <dt class="col-sm-3">Usage</dt>
+                <dd class="col-sm-9"><span class="text-warning">freqdist</span> [num_words]</dd>
+
+                <dt class="col-sm-3">Example</dt>
+                <dd class="col-sm-9">freqdist 10</dd>
+
+                <dt class="col-sm-3">Output</dt>
+                <dd class="col-sm-9 card-cmd">
+                    Showing top 10 words<br \>
+                    Word<span style="padding: 100px;"></span>Count<br \>
+                    ,<span style="padding: 110px;"></span>  11,392<br \>                   
+                    the<span style="padding: 105px;"></span>7,480<br \>             
+                    .<span style="padding: 115px;"></span>7,346<br \>                    
+                    and<span style="padding: 105px;"></span>5,794<br \>                    
+                    I<span style="padding: 115px;"></span>4,839<br \>                    
+                    to<span style="padding: 110px;"></span>4,504<br \>                    
+                    of<span style="padding: 110px;"></span>3,709<br \>                    
+                    a<span style="padding: 115px;"></span>2,921<br \>                    
+                    in<span style="padding: 110px;"></span>2,466<br \>                    
+                    that<span style="padding: 100px;"></span>2,432<br \> 
+                </dd>
             </dl>
         </div>
     </div>
