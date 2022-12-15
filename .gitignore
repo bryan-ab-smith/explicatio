@@ -8,3 +8,4 @@ explicatio/__init__.dist
 explicatio/.DS_Store
 .DS_Store
 docs/node_modules/
+docs/pandocs/output/
