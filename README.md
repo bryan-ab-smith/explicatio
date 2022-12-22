@@ -61,6 +61,16 @@ For this to work, TCL (tcl-tk through Homebrew on macOS) and a C compiler (eg. g
 
 NOTE: This is not actively tested nor is it a priority if this doesn't work.
 
+### Documentation
+Documentation for explicatio is provided by way of pandoc. To build the documentation, you will need to install Pandoc first (see [here](https://pandoc.org/installing.html)) and then run the build script in docs/pandocs:
+
+    sh ./build.sh
+
+The docs will be generated and made available in the docs/pandocs/output directory. As of now, the following is made:
+* HTML
+* Man page (which is installed with the build script)
+* PDF (if LateX is installed)
+
 ### Licence
 
 Copyright 2022 Bryan Smith.
